@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ListReady — Free HEIC to JPG Converter & Image Resizer for Sellers (Etsy, eBay, Poshmark, Amazon)</title>
+<meta name="description" content="Convert iPhone HEIC photos to JPG, resize to Etsy/eBay/Amazon/Poshmark sizes, compress, and strip GPS data — 100% free and 100% in your browser. Your photos never get uploaded." />
+<meta name="keywords" content="heic to jpg, convert heic, image resizer, etsy photo size, ebay photo resizer, compress images, remove exif, batch image converter, marketplace photo tool" />
+<meta property="og:title" content="ListReady — Free HEIC→JPG + Resizer for Online Sellers" />
+<meta property="og:description" content="Get your product photos listing-ready in seconds. Convert HEIC, resize to marketplace presets, compress, strip location data. Free, private, in-browser." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>" />
+<style>
+  :root{
+    --bg:#0b1020; --panel:#121a30; --panel2:#172244; --line:#243156;
+    --txt:#e8ecf6; --muted:#9aa6c4; --accent:#4f8cff; --accent2:#27d3a2;
+    --gold:#ffcf5c; --danger:#ff6b6b; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0d1426);color:var(--txt);line-height:1.5}
+  a{color:var(--accent)}
+  header.top{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,16,32,.85);backdrop-filter:blur(8px);z-index:20}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}
+  .brand .logo{font-size:24px}
+  .brand .pill{font-size:11px;font-weight:700;color:#0b1020;background:var(--accent2);border-radius:999px;padding:2px 8px;margin-left:6px}
+  .top-actions{display:flex;align-items:center;gap:10px}
+  .status-pill{font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid var(--line)}
+  .status-free{color:var(--muted)}
+  .status-pro{color:#0b1020;background:linear-gradient(90deg,var(--gold),#ffb347);border:none}
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-weight:700;font-size:14px;padding:10px 16px;transition:.15s}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#3a78ef}
+  .btn-gold{background:linear-gradient(90deg,var(--gold),#ffb347);color:#0b1020}
+  .btn-gold:hover{filter:brightness(1.05)}
+  .btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  .btn-ghost:hover{background:var(--panel2)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 22px 80px}
+  .hero{text-align:center;margin:18px 0 26px}
+  .hero h1{font-size:30px;margin:0 0 8px;line-height:1.2}
+  .hero p{color:var(--muted);margin:0;font-size:16px}
+  .hero .trust{margin-top:14px;font-size:13px;color:var(--accent2);font-weight:700}
+  .layout{display:grid;grid-template-columns:1fr;gap:22px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .drop{border:2px dashed var(--line);border-radius:var(--radius);padding:42px 20px;text-align:center;transition:.15s;background:var(--panel)}
+  .drop.drag{border-color:var(--accent);background:var(--panel2)}
+  .drop h3{margin:8px 0 4px;font-size:18px}
+  .drop p{color:var(--muted);margin:0 0 14px;font-size:14px}
+  .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:4px}
+  .field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--muted)}
+  .field select,.field input[type=text],.field input[type=number]{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:9px 10px;font-size:14px}
+  .range-row{display:flex;align-items:center;gap:10px}
+  input[type=range]{flex:1;accent-color:var(--accent)}
+  .qval{font-variant-numeric:tabular-nums;font-weight:700;width:42px;text-align:right}
+  .lock{position:relative}
+  .lock .lockbadge{position:absolute;top:-9px;right:0;font-size:10px;font-weight:800;background:var(--gold);color:#0b1020;border-radius:999px;padding:1px 7px}
+  .lock.locked .inner{opacity:.5;pointer-events:none}
+  .custom-dims{display:none;gap:8px}
+  .custom-dims.show{display:flex}
+  .custom-dims input{width:50%}
+  .action-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+  .filecount{color:var(--muted);font-size:14px}
+  .results{margin-top:6px}
+  .results-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .thumb{background:var(--panel2);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+  .thumb img{width:100%;height:120px;object-fit:cover;background:#000}
+  .thumb .meta{padding:8px 10px;font-size:11px;color:var(--muted)}
+  .thumb .meta .name{color:var(--txt);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+  .thumb .meta .saved{color:var(--accent2);font-weight:700}
+  .thumb .dl{margin:0 8px 8px;font-size:12px;padding:6px;text-align:center;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--txt);text-decoration:none}
+  .thumb .dl:hover{background:var(--line)}
+  .bar{height:8px;background:var(--panel2);border-radius:999px;overflow:hidden;margin-top:14px;display:none}
+  .bar.show{display:block}
+  .bar > div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .2s}
+  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:30px}
+  .feat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .feat .ico{font-size:22px}
+  .feat h4{margin:8px 0 4px;font-size:15px}
+  .feat p{margin:0;color:var(--muted);font-size:13px}
+  .faq{margin-top:34px}
+  .faq h2{font-size:22px}
+  .faq details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:10px}
+  .faq summary{cursor:pointer;font-weight:700}
+  .faq p{color:var(--muted);font-size:14px}
+  footer{border-top:1px solid var(--line);padding:24px 22px;text-align:center;color:var(--muted);font-size:13px}
+  /* modal */
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(4,8,20,.75);z-index:50;align-items:center;justify-content:center;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:440px;width:100%;padding:26px;position:relative}
+  .modal h2{margin:0 0 6px;font-size:22px}
+  .modal .close{position:absolute;top:14px;right:16px;background:none;color:var(--muted);font-size:22px;padding:0;line-height:1}
+  .pro-list{list-style:none;padding:0;margin:14px 0}
+  .pro-list li{padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .pro-list li::before{content:"✓ ";color:var(--accent2);font-weight:800}
+  .price{font-size:30px;font-weight:800;margin:10px 0}
+  .price small{font-size:14px;color:var(--muted);font-weight:600}
+  .license-row{display:flex;gap:8px;margin-top:14px}
+  .license-row input{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:9px 10px}
+  .msg{font-size:13px;margin-top:10px;min-height:18px}
+  .msg.ok{color:var(--accent2)} .msg.err{color:var(--danger)}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:12px 18px;border-radius:10px;font-size:14px;z-index:60;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+  @media(max-width:560px){.hero h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">📸</span> ListReady <span class="pill">in-browser</span></div>
+  <div class="top-actions">
+    <span id="statusPill" class="status-pill status-free">Free</span>
+    <button id="openPro" class="btn-gold">Upgrade to Pro</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Get your product photos listing-ready in seconds</h1>
+    <p>Convert iPhone <b>HEIC → JPG</b>, resize for Etsy / eBay / Amazon / Poshmark, compress, and strip GPS location — all free.</p>
+    <div class="trust">🔒 100% private — your photos are processed on your device and never uploaded to any server.</div>
+  </section>
+
+  <div class="layout">
+    <!-- Drop zone -->
+    <div class="drop card" id="drop">
+      <div style="font-size:36px">⬆️</div>
+      <h3>Drop photos here or click to browse</h3>
+      <p>JPG, PNG, WEBP, and HEIC supported · add as many as you like</p>
+      <button class="btn-primary" id="browseBtn">Choose photos</button>
+      <input type="file" id="fileInput" accept="image/*,.heic,.heif" multiple hidden />
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <div class="controls">
+        <div class="field">
+          <label>Output format</label>
+          <select id="fmt">
+            <option value="image/jpeg">JPG (best for marketplaces)</option>
+            <option value="image/png">PNG (lossless / transparency)</option>
+            <option value="image/webp">WEBP — smallest size 🔒 Pro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Resize preset</label>
+          <select id="preset">
+            <option value="0">Keep original size</option>
+            <option value="1600" selected>eBay / Amazon — 1600px</option>
+            <option value="2000">Etsy — 2000px</option>
+            <option value="1200">Poshmark / Mercari — 1200px</option>
+            <option value="1080s">Instagram square — 1080×1080</option>
+            <option value="custom">Custom…</option>
+          </select>
+          <div class="custom-dims" id="customDims">
+            <input type="number" id="cw" placeholder="width px" min="1" />
+            <input type="number" id="ch" placeholder="height px (optional)" min="1" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Quality / compression</label>
+          <div class="range-row">
+            <input type="range" id="quality" min="40" max="100" value="82" />
+            <span class="qval" id="qval">82</span>
+          </div>
+        </div>
+        <div class="field lock locked" id="wmField">
+          <span class="lockbadge">PRO</span>
+          <label>Watermark text</label>
+          <div class="inner">
+            <input type="text" id="wmText" placeholder="e.g. @yourshop" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-primary" id="processBtn" disabled>Process photos</button>
+        <button class="btn-ghost" id="clearBtn" disabled>Clear</button>
+        <span class="filecount" id="fileCount">No photos selected</span>
+      </div>
+      <div class="bar" id="bar"><div id="barFill"></div></div>
+    </div>
+
+    <!-- Results -->
+    <div class="card results" id="resultsCard" style="display:none">
+      <div class="results-head">
+        <h3 style="margin:0">Done ✨ <span id="resCount" style="color:var(--muted);font-weight:600"></span></h3>
+        <button class="btn-primary" id="downloadAll">⬇ Download all (.zip)</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="feat"><div class="ico">📱</div><h4>HEIC → JPG, instantly</h4><p>iPhones save photos as HEIC, which most marketplaces reject. Convert in one click.</p></div>
+    <div class="feat"><div class="ico">📐</div><h4>Marketplace presets</h4><p>One-tap resizing tuned for Etsy, eBay, Amazon, Poshmark, and Instagram.</p></div>
+    <div class="feat"><div class="ico">🗜️</div><h4>Smart compression</h4><p>Shrink file size so listings load fast — without making photos look bad.</p></div>
+    <div class="feat"><div class="ico">🛡️</div><h4>Strips GPS & metadata</h4><p>Re-encoding removes the hidden location data in your photos before you post them publicly.</p></div>
+  </section>
+
+  <!-- FAQ (SEO) -->
+  <section class="faq">
+    <h2>Frequently asked questions</h2>
+    <details><summary>How do I convert an iPhone HEIC photo to JPG?</summary><p>Drop your HEIC files above, choose "JPG" as the output format, and click Process. ListReady decodes the HEIC right in your browser and gives you standard JPG files you can upload anywhere.</p></details>
+    <details><summary>Are my photos uploaded anywhere?</summary><p>No. Everything runs locally in your browser using your device's own processor. Your images never touch a server, which is why it's free and private.</p></details>
+    <details><summary>What image size should I use for Etsy / eBay / Amazon?</summary><p>Etsy recommends about 2000px on the longest side; eBay and Amazon work great around 1600px; Poshmark and Mercari around 1200px. Use the preset dropdown and we'll handle it.</p></details>
+    <details><summary>Does it remove location data from my photos?</summary><p>Yes. Because we re-encode each image, hidden EXIF data — including GPS coordinates — is stripped automatically, so you don't broadcast where a photo was taken.</p></details>
+    <details><summary>What's the difference between Free and Pro?</summary><p>Free handles up to 15 photos per batch with JPG/PNG output. Pro unlocks unlimited batches, WEBP output, and custom watermarks — a one-time payment, no subscription.</p></details>
+  </section>
+</div>
+
+<footer>
+  <div>📸 <b>ListReady</b> — built for online sellers. Runs 100% in your browser.</div>
+  <div style="margin-top:6px">No account · no uploads · no tracking of your images.</div>
+</footer>
+
+<!-- Pro modal -->
+<div class="modal-bg" id="proModal">
+  <div class="modal">
+    <button class="close" id="closePro">×</button>
+    <h2>ListReady Pro</h2>
+    <p style="color:var(--muted);margin:0">One-time payment. Yours forever. No subscription.</p>
+    <div class="price">$9 <small>one time</small></div>
+    <ul class="pro-list">
+      <li>Unlimited photos per batch (Free caps at 15)</li>
+      <li>WEBP output — up to 35% smaller files</li>
+      <li>Custom text watermark on every photo</li>
+      <li>Support an indie tool that respects your privacy</li>
+    </ul>
+    <a id="buyBtn" class="btn-gold" style="display:block;text-align:center;text-decoration:none;padding:12px" href="#" target="_blank" rel="noopener">Get Pro on Gumroad →</a>
+    <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:14px">
+      <label style="font-size:13px;font-weight:700;color:var(--muted)">Already bought? Enter your license key:</label>
+      <div class="license-row">
+        <input type="text" id="licenseInput" placeholder="XXXXXXXX-XXXXXXXX-..." />
+        <button class="btn-primary" id="activateBtn">Activate</button>
+      </div>
+      <div class="msg" id="licenseMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Libraries (CDN, loaded only when needed for HEIC / ZIP) -->
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+/* ============================================================
+   ListReady — client-side image toolkit
+   CONFIG: set these two values after you create your Gumroad product
+   ============================================================ */
+const GUMROAD_PRODUCT_ID = "YOUR_GUMROAD_PRODUCT_ID";   // from Gumroad product → Advanced
+const GUMROAD_BUY_URL    = "https://gumroad.com/l/YOUR_PRODUCT"; // your product page URL
+const FREE_BATCH_LIMIT   = 15;
+
+/* ---------- state ---------- */
+let files = [];          // selected File objects
+let isPro = localStorage.getItem("lr_pro") === "1";
+let lastResults = [];    // {name, blob, url}
+
+/* ---------- elements ---------- */
+const $ = (id) => document.getElementById(id);
+const drop = $("drop"), fileInput = $("fileInput");
+const fmtSel = $("fmt"), presetSel = $("preset"), customDims = $("customDims");
+const qualitySlider = $("quality"), qval = $("qval");
+const processBtn = $("processBtn"), clearBtn = $("clearBtn"), fileCount = $("fileCount");
+const bar = $("bar"), barFill = $("barFill");
+const resultsCard = $("resultsCard"), grid = $("grid"), resCount = $("resCount");
+const wmField = $("wmField");
+
+/* ---------- pro UI ---------- */
+function refreshProUI(){
+  isPro = localStorage.getItem("lr_pro") === "1";
+  const pill = $("statusPill");
+  if(isPro){
+    pill.textContent = "PRO"; pill.className = "status-pill status-pro";
+    $("openPro").style.display = "none";
+    wmField.classList.remove("locked");
+    // unlock webp option label
+    [...fmtSel.options].forEach(o=>{ if(o.value==="image/webp") o.textContent="WEBP — smallest size"; });
+  } else {
+    pill.textContent = "Free"; pill.className = "status-pill status-free";
+  }
+}
+refreshProUI();
+
+/* ---------- file selection ---------- */
+$("browseBtn").addEventListener("click",()=>fileInput.click());
+drop.addEventListener("click",(e)=>{ if(e.target.id!=="browseBtn") fileInput.click(); });
+fileInput.addEventListener("change",()=>addFiles(fileInput.files));
+;["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("drag");}));
+;["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("drag");}));
+drop.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
+
+function isImage(f){
+  return f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name);
+}
+function addFiles(list){
+  for(const f of list){ if(isImage(f)) files.push(f); }
+  updateFileCount();
+}
+function updateFileCount(){
+  const n = files.length;
+  fileCount.textContent = n ? `${n} photo${n>1?"s":""} ready` : "No photos selected";
+  processBtn.disabled = n===0;
+  clearBtn.disabled = n===0;
+  if(!isPro && n>FREE_BATCH_LIMIT){
+    fileCount.textContent += ` — Free processes the first ${FREE_BATCH_LIMIT}`;
+  }
+}
+clearBtn.addEventListener("click",()=>{ files=[]; updateFileCount(); });
+
+/* ---------- controls ---------- */
+qualitySlider.addEventListener("input",()=>qval.textContent=qualitySlider.value);
+presetSel.addEventListener("change",()=>{
+  customDims.classList.toggle("show", presetSel.value==="custom");
+});
+fmtSel.addEventListener("change",()=>{
+  if(fmtSel.value==="image/webp" && !isPro){
+    toast("WEBP output is a Pro feature");
+    openModal();
+    fmtSel.value="image/jpeg";
+  }
+});
+
+/* ---------- core processing ---------- */
+processBtn.addEventListener("click",processAll);
+
+async function processAll(){
+  let queue = files.slice();
+  if(!isPro && queue.length>FREE_BATCH_LIMIT){
+    queue = queue.slice(0,FREE_BATCH_LIMIT);
+    toast(`Free tier: processing first ${FREE_BATCH_LIMIT}. Upgrade for unlimited.`);
+  }
+  processBtn.disabled=true; clearBtn.disabled=true;
+  bar.classList.add("show"); barFill.style.width="0%";
+  grid.innerHTML=""; lastResults=[]; resultsCard.style.display="none";
+
+  const fmt = fmtSel.value;
+  const q = parseInt(qualitySlider.value,10)/100;
+  const ext = fmt==="image/png"?"png":fmt==="image/webp"?"webp":"jpg";
+
+  for(let i=0;i<queue.length;i++){
+    try{
+      const out = await processOne(queue[i], fmt, q);
+      const baseName = queue[i].name.replace(/\.[^.]+$/,"");
+      const name = `${baseName}.${ext}`;
+      const url = URL.createObjectURL(out.blob);
+      lastResults.push({name, blob:out.blob, url});
+      addThumb(name, url, queue[i].size, out.blob.size);
+    }catch(err){
+      console.error("Failed on",queue[i].name,err);
+      addThumb(queue[i].name+" (failed)","", queue[i].size, 0, true);
+    }
+    barFill.style.width = Math.round(((i+1)/queue.length)*100)+"%";
+  }
+
+  resCount.textContent = `· ${lastResults.length} file${lastResults.length>1?"s":""}`;
+  resultsCard.style.display = lastResults.length? "block":"none";
+  processBtn.disabled=false; clearBtn.disabled=false;
+  setTimeout(()=>bar.classList.remove("show"),600);
+}
+
+async function processOne(file, fmt, quality){
+  // 1. Get a decodable bitmap source (HEIC needs conversion first)
+  let srcBlob = file;
+  if(/\.(heic|heif)$/i.test(file.name) || file.type==="image/heic" || file.type==="image/heif"){
+    if(typeof heic2any!=="function") throw new Error("HEIC library not loaded");
+    srcBlob = await heic2any({ blob:file, toType:"image/jpeg", quality:0.92 });
+    if(Array.isArray(srcBlob)) srcBlob = srcBlob[0];
+  }
+
+  // 2. Decode with correct EXIF orientation when supported
+  let bmp;
+  try{ bmp = await createImageBitmap(srcBlob,{imageOrientation:"from-image"}); }
+  catch(e){ bmp = await loadViaImg(srcBlob); }
+
+  // 3. Compute target dimensions
+  const {w,h} = targetSize(bmp.width, bmp.height);
+
+  // 4. Draw to canvas (this also strips ALL metadata incl. GPS)
+  const canvas = document.createElement("canvas");
+  canvas.width=w; canvas.height=h;
+  const ctx = canvas.getContext("2d");
+  if(fmt==="image/jpeg"){ ctx.fillStyle="#fff"; ctx.fillRect(0,0,w,h); } // flatten transparency for JPG
+  ctx.drawImage(bmp,0,0,w,h);
+
+  // 5. Watermark (Pro)
+  if(isPro){
+    const wm = $("wmText").value.trim();
+    if(wm) drawWatermark(ctx,w,h,wm);
+  }
+
+  // 6. Encode
+  const blob = await new Promise((res,rej)=>{
+    canvas.toBlob(b=> b?res(b):rej(new Error("encode failed")), fmt, quality);
+  });
+  if(bmp.close) bmp.close();
+  return {blob};
+}
+
+function loadViaImg(blob){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>res(img);
+    img.onerror=()=>rej(new Error("decode failed"));
+    img.src=URL.createObjectURL(blob);
+  });
+}
+
+function targetSize(ow, oh){
+  const p = presetSel.value;
+  if(p==="0") return {w:ow,h:oh};
+  if(p==="1080s"){ return {w:1080,h:1080}; }
+  if(p==="custom"){
+    const cw=parseInt($("cw").value,10), ch=parseInt($("ch").value,10);
+    if(cw && ch) return {w:cw,h:ch};
+    if(cw){ const r=cw/ow; return {w:cw,h:Math.round(oh*r)}; }
+    if(ch){ const r=ch/oh; return {w:Math.round(ow*r),h:ch}; }
+    return {w:ow,h:oh};
+  }
+  // numeric preset = max longest side
+  const max=parseInt(p,10);
+  if(Math.max(ow,oh)<=max) return {w:ow,h:oh}; // never upscale
+  const r = max/Math.max(ow,oh);
+  return {w:Math.round(ow*r), h:Math.round(oh*r)};
+}
+
+function drawWatermark(ctx,w,h,text){
+  const fs=Math.max(16,Math.round(w*0.04));
+  ctx.font=`700 ${fs}px -apple-system,Arial,sans-serif`;
+  ctx.textAlign="right"; ctx.textBaseline="bottom";
+  const pad=Math.round(fs*0.6);
+  ctx.shadowColor="rgba(0,0,0,.55)"; ctx.shadowBlur=fs*0.4;
+  ctx.fillStyle="rgba(255,255,255,.85)";
+  ctx.fillText(text, w-pad, h-pad);
+  ctx.shadowBlur=0;
+}
+
+function addThumb(name,url,oldSize,newSize,failed){
+  const el=document.createElement("div");
+  el.className="thumb";
+  const saved = oldSize&&newSize? Math.max(0,Math.round((1-newSize/oldSize)*100)) : 0;
+  el.innerHTML=`
+    ${url?`<img src="${url}" alt="${name}">`:`<div style="height:120px;display:flex;align-items:center;justify-content:center;color:var(--danger)">⚠️ failed</div>`}
+    <div class="meta">
+      <div class="name" title="${name}">${name}</div>
+      ${url?`<div>${fmtBytes(newSize)} <span class="saved">${saved>0?`−${saved}%`:""}</span></div>`:`<div>could not process</div>`}
+    </div>
+    ${url?`<a class="dl" href="${url}" download="${name}">⬇ Download</a>`:""}`;
+  grid.appendChild(el);
+}
+function fmtBytes(b){ if(b<1024)return b+" B"; if(b<1048576)return (b/1024).toFixed(0)+" KB"; return (b/1048576).toFixed(1)+" MB"; }
+
+/* ---------- download all (zip) ---------- */
+$("downloadAll").addEventListener("click",async()=>{
+  if(!lastResults.length) return;
+  if(typeof JSZip==="undefined"){ toast("ZIP library not loaded"); return; }
+  const zip=new JSZip();
+  lastResults.forEach(r=>zip.file(r.name,r.blob));
+  const blob=await zip.generateAsync({type:"blob"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="listready-photos.zip"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+});
+
+/* ---------- Pro modal + Gumroad license ---------- */
+const proModal=$("proModal");
+function openModal(){ proModal.classList.add("show"); }
+$("openPro").addEventListener("click",openModal);
+$("closePro").addEventListener("click",()=>proModal.classList.remove("show"));
+proModal.addEventListener("click",e=>{ if(e.target===proModal) proModal.classList.remove("show"); });
+$("buyBtn").href = GUMROAD_BUY_URL;
+
+$("activateBtn").addEventListener("click",async()=>{
+  const key=$("licenseInput").value.trim();
+  const msg=$("licenseMsg");
+  if(!key){ msg.className="msg err"; msg.textContent="Enter your license key."; return; }
+  if(GUMROAD_PRODUCT_ID==="YOUR_GUMROAD_PRODUCT_ID"){
+    // Not configured yet — allow local demo unlock so the owner can test.
+    localStorage.setItem("lr_pro","1"); refreshProUI();
+    msg.className="msg ok"; msg.textContent="Pro unlocked (demo — configure Gumroad to verify real keys).";
+    setTimeout(()=>proModal.classList.remove("show"),1200); return;
+  }
+  msg.className="msg"; msg.textContent="Checking…";
+  try{
+    const body=new URLSearchParams({product_id:GUMROAD_PRODUCT_ID,license_key:key,increment_uses_count:"false"});
+    const r=await fetch("https://api.gumroad.com/v2/licenses/verify",{method:"POST",body});
+    const data=await r.json();
+    if(data.success && !data.purchase?.refunded && !data.purchase?.chargebacked){
+      localStorage.setItem("lr_pro","1");
+      localStorage.setItem("lr_key",key);
+      refreshProUI();
+      msg.className="msg ok"; msg.textContent="✓ Pro activated. Thank you!";
+      setTimeout(()=>proModal.classList.remove("show"),1200);
+    }else{
+      msg.className="msg err"; msg.textContent="That key wasn't valid. Double-check it or contact support.";
+    }
+  }catch(e){
+    msg.className="msg err"; msg.textContent="Couldn't reach the license server. Try again.";
+  }
+});
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(t){
+  const el=$("toast"); el.textContent=t; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),2600);
+}
+</script>
+</body>
+</html>
