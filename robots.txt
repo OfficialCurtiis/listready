@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://officialcurtiis.github.io/listready/sitemap.xml
