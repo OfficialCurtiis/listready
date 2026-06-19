@@ -1,10 +1,10 @@
 /* ============================================================
    ListReady — client-side image toolkit
-   CONFIG: set these two values after you create your Gumroad product
+   CONFIG: Gumroad product "ListReady Pro" ($9, license key per sale)
    ============================================================ */
-const GUMROAD_PRODUCT_ID = "YOUR_GUMROAD_PRODUCT_ID";   // from Gumroad product → Advanced
-const GUMROAD_BUY_URL    = "https://gumroad.com/l/YOUR_PRODUCT"; // your product page URL
-const FREE_BATCH_LIMIT   = 15;
+const GUMROAD_PERMALINK = "cwvorz";                              // product permalink (verified against Gumroad)
+const GUMROAD_BUY_URL   = "https://risxmain.gumroad.com/l/cwvorz"; // your product page URL
+const FREE_BATCH_LIMIT  = 15;
 
 /* ---------- state ---------- */
 let files = [];          // selected File objects
@@ -230,15 +230,9 @@ $("activateBtn").addEventListener("click",async()=>{
   const key=$("licenseInput").value.trim();
   const msg=$("licenseMsg");
   if(!key){ msg.className="msg err"; msg.textContent="Enter your license key."; return; }
-  if(GUMROAD_PRODUCT_ID==="YOUR_GUMROAD_PRODUCT_ID"){
-    // Not configured yet — allow local demo unlock so the owner can test.
-    localStorage.setItem("lr_pro","1"); refreshProUI();
-    msg.className="msg ok"; msg.textContent="Pro unlocked (demo — configure Gumroad to verify real keys).";
-    setTimeout(()=>proModal.classList.remove("show"),1200); return;
-  }
   msg.className="msg"; msg.textContent="Checking…";
   try{
-    const body=new URLSearchParams({product_id:GUMROAD_PRODUCT_ID,license_key:key,increment_uses_count:"false"});
+    const body=new URLSearchParams({product_permalink:GUMROAD_PERMALINK,license_key:key,increment_uses_count:"false"});
     const r=await fetch("https://api.gumroad.com/v2/licenses/verify",{method:"POST",body});
     const data=await r.json();
     if(data.success && !data.purchase?.refunded && !data.purchase?.chargebacked){
