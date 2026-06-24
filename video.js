@@ -5,8 +5,7 @@
    ============================================================ */
 const GUMROAD_PRODUCT_ID = "0YmEXwtR7cTpcKMV-w_Otg==";
 const GUMROAD_BUY_URL    = "https://risxmain.gumroad.com/l/cwvorz";
-const CORE_BASE = "https://cdn.jsdelivr.net/npm/@imput/ffwasm524-core@0.12.6-6/dist/umd";
-const WORKER_URL = new URL("814.ffmpeg.js", location.href).href; // same-origin worker (can import the CDN core)
+const abs = (p) => new URL(p, location.href).href; // same-origin asset URL
 
 const $ = (id) => document.getElementById(id);
 let isPro = localStorage.getItem("lr_pro") === "1";
@@ -48,16 +47,15 @@ function fmtBytes(b){ if (b < 1048576) return (b/1024).toFixed(0) + " KB"; retur
 /* ---------- lazy-load the ffmpeg engine ---------- */
 async function ensureFfmpeg(){
   if (ffLoaded) return;
-  if (!window.FFmpegWASM || !window.FFmpegUtil) throw new Error("FFmpeg library failed to load");
-  setStatus("Loading the converter engine (~25 MB, first time only)…");
+  if (!window.FFmpegWASM) throw new Error("FFmpeg library failed to load");
+  setStatus("Loading the converter engine (first time only)…");
   const { FFmpeg } = window.FFmpegWASM;
-  const { toBlobURL } = window.FFmpegUtil;
   ffmpeg = new FFmpeg();
   ffmpeg.on("progress", ({ progress }) => { if (progress >= 0 && progress <= 1) setProgress(Math.min(99, Math.round(progress * 100))); });
   await ffmpeg.load({
-    classWorkerURL: WORKER_URL,
-    coreURL: await toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, "text/javascript"),
-    wasmURL: await toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, "application/wasm"),
+    classWorkerURL: abs("814.ffmpeg.js"),
+    coreURL: abs("ffmpeg-core.js"),
+    wasmURL: abs("ffmpeg-core.wasm"),
   });
   ffLoaded = true;
 }
