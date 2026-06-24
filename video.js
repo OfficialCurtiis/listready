@@ -48,14 +48,15 @@ function fmtBytes(b){ if (b < 1048576) return (b/1024).toFixed(0) + " KB"; retur
 async function ensureFfmpeg(){
   if (ffLoaded) return;
   if (!window.FFmpegWASM) throw new Error("FFmpeg library failed to load");
-  setStatus("Loading the converter engine (first time only)…");
+  setStatus("Loading the converter engine (~30 MB, first time only)… please wait.");
   const { FFmpeg } = window.FFmpegWASM;
   ffmpeg = new FFmpeg();
   ffmpeg.on("progress", ({ progress }) => { if (progress >= 0 && progress <= 1) setProgress(Math.min(99, Math.round(progress * 100))); });
+  const CORE = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
   await ffmpeg.load({
-    classWorkerURL: abs("814.ffmpeg.js"),
-    coreURL: abs("ffmpeg-core.js"),
-    wasmURL: abs("ffmpeg-core.wasm"),
+    classWorkerURL: abs("814.ffmpeg.js"),   // same-origin worker
+    coreURL: `${CORE}/ffmpeg-core.js`,        // full FFmpeg core (mov demux + HEVC decode + libx264)
+    wasmURL: `${CORE}/ffmpeg-core.wasm`,
   });
   ffLoaded = true;
 }
