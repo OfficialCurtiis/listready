@@ -249,6 +249,13 @@ $("activateBtn").addEventListener("click",async()=>{
   }
 });
 
+/* ---------- info tooltips (tap to toggle on mobile) ---------- */
+document.querySelectorAll(".info").forEach(el=>{
+  el.addEventListener("click",e=>{ e.stopPropagation(); el.classList.toggle("open"); });
+  el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.classList.toggle("open"); } });
+});
+document.addEventListener("click",()=>document.querySelectorAll(".info.open").forEach(el=>el.classList.remove("open")));
+
 /* ---------- toast ---------- */
 let toastTimer;
 function toast(t){
