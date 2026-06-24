@@ -6,7 +6,7 @@
 const GUMROAD_PRODUCT_ID = "0YmEXwtR7cTpcKMV-w_Otg==";
 const GUMROAD_BUY_URL    = "https://risxmain.gumroad.com/l/cwvorz";
 const CORE_BASE = "https://cdn.jsdelivr.net/npm/@imput/ffwasm524-core@0.12.6-6/dist/umd";
-const WRAP_BASE = "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd";
+const WORKER_URL = new URL("814.ffmpeg.js", location.href).href; // same-origin worker (can import the CDN core)
 
 const $ = (id) => document.getElementById(id);
 let isPro = localStorage.getItem("lr_pro") === "1";
@@ -55,7 +55,7 @@ async function ensureFfmpeg(){
   ffmpeg = new FFmpeg();
   ffmpeg.on("progress", ({ progress }) => { if (progress >= 0 && progress <= 1) setProgress(Math.min(99, Math.round(progress * 100))); });
   await ffmpeg.load({
-    classWorkerURL: await toBlobURL(`${WRAP_BASE}/814.ffmpeg.js`, "text/javascript"),
+    classWorkerURL: WORKER_URL,
     coreURL: await toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, "text/javascript"),
     wasmURL: await toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, "application/wasm"),
   });
