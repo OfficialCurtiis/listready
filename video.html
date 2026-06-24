@@ -27,6 +27,9 @@
   #vresult{display:none;margin-top:18px}
   #vpreview{width:100%;max-height:380px;background:#000;border-radius:12px;border:1px solid var(--line)}
   .vres-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .vgate{margin-top:14px;font-size:14px;font-weight:700;padding:10px 14px;border-radius:10px}
+  .vgate.ok{color:var(--accent2);background:rgba(39,211,162,.10);border:1px solid var(--accent2)}
+  .vgate.locked{color:var(--gold);background:rgba(255,207,92,.08);border:1px solid var(--gold)}
 </style>
 </head>
 <body>
@@ -50,10 +53,10 @@
     <!-- Pro gate banner (hidden once Pro) -->
     <div class="pro-banner free-only">
       <div>
-        <h3>🎬 Video conversion is a Pro feature</h3>
-        <p>One-time <b>$9</b> unlocks it (plus unlimited photo batches & watermarks). Converting HEVC video is heavy work that runs on your device — Pro keeps the lights on.</p>
+        <h3>🎬 Short clips convert free</h3>
+        <p>Clips under <b>1 minute</b> (and 80 MB) are free. Longer or larger videos need a one-time <b>$9</b> Pro unlock — which also covers unlimited photo batches & watermarks on the main tool.</p>
       </div>
-      <button id="unlockBtn" class="btn-gold">Unlock with Pro — $9</button>
+      <button id="unlockBtn" class="btn-gold">Get Pro — $9</button>
     </div>
 
     <!-- Converter -->
@@ -66,6 +69,8 @@
         <input type="file" id="vfile" accept="video/*,.mov,.mp4,.m4v" hidden />
         <div id="vname"></div>
       </div>
+
+      <div id="vgate" class="vgate" style="display:none"></div>
 
       <div class="action-bar" style="margin-top:16px">
         <button class="btn-primary" id="convertBtn" disabled>Convert to MP4</button>
@@ -93,7 +98,7 @@
     <details><summary>Why won’t my iPhone videos play on Windows?</summary><p>iPhones record in HEVC (H.265), Apple’s high-efficiency video codec. Windows doesn’t play HEVC out of the box — you’d normally need a paid codec from the Microsoft Store. Converting the video to standard MP4 (H.264) fixes it: it plays in any Windows app with no extra software.</p></details>
     <details><summary>Is my video uploaded to a server?</summary><p>No. The conversion runs entirely in your browser, on your own machine, using a software video engine. Your video never leaves your computer.</p></details>
     <details><summary>How long does it take?</summary><p>It depends on the clip. Because it runs in software on your device (no special hardware), a short clip takes a minute or two; longer or 4K videos take longer and use a lot of memory. Short clips work best.</p></details>
-    <details><summary>Why is video conversion Pro-only?</summary><p>Converting HEVC video is far heavier than photos and loads a ~25 MB engine. Pro ($9 one-time) covers it — and the same purchase also unlocks unlimited photo batches and watermarks on the main tool.</p></details>
+    <details><summary>Is the video converter free?</summary><p>Short clips — under about <b>1 minute and 80 MB</b> — convert free. Longer or larger videos need a one-time $9 Pro unlock, which also covers unlimited photo batches and watermarks on the main tool. (Converting video is heavy work that runs on your own device, so Pro keeps it sustainable.)</p></details>
     <details><summary>What formats can I convert?</summary><p>iPhone .MOV and .MP4 videos (HEVC or H.264) → standard H.264 MP4. The result plays on Windows, Android, and just about anything.</p></details>
   </section>
 </div>
@@ -112,7 +117,7 @@
     <p style="color:var(--muted);margin:0">One-time payment. Yours forever. No subscription.</p>
     <div class="price">$9 <small>one time</small></div>
     <ul class="pro-list">
-      <li>iPhone video → MP4 converter (HEVC/.MOV)</li>
+      <li>Long & large iPhone video → MP4 (short clips are free)</li>
       <li>Unlimited photos per batch (Free caps at 15)</li>
       <li>WEBP output + custom watermarks</li>
       <li>One purchase unlocks everything, forever</li>

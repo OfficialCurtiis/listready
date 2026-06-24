@@ -6,10 +6,12 @@
 const GUMROAD_PRODUCT_ID = "0YmEXwtR7cTpcKMV-w_Otg==";
 const GUMROAD_BUY_URL    = "https://risxmain.gumroad.com/l/cwvorz";
 const abs = (p) => new URL(p, location.href).href; // same-origin asset URL
+const FREE_MAX_SECONDS = 60;                 // clips up to 1 min are free
+const FREE_MAX_BYTES = 80 * 1024 * 1024;     // ...and up to 80 MB
 
 const $ = (id) => document.getElementById(id);
 let isPro = localStorage.getItem("lr_pro") === "1";
-let ffmpeg = null, ffLoaded = false, videoFile = null;
+let ffmpeg = null, ffLoaded = false, videoFile = null, needsPro = false;
 
 /* ---------- Pro state ---------- */
 function refreshPro(){
@@ -19,7 +21,8 @@ function refreshPro(){
   pill.textContent = isPro ? "PRO" : "Free";
   pill.className = "status-pill " + (isPro ? "status-pro" : "status-free");
   if (isPro) $("openPro").style.display = "none";
-  $("convertBtn").disabled = !(isPro && videoFile);
+  $("convertBtn").disabled = !(videoFile && (isPro || !needsPro));
+  if (videoFile) showGate(window.__lastDur);
 }
 refreshPro();
 
@@ -38,9 +41,44 @@ function setFile(f){
   videoFile = f;
   $("vname").textContent = f.name + "  ·  " + fmtBytes(f.size);
   $("vname").style.display = "block";
-  $("convertBtn").disabled = !isPro;
   $("vresult").style.display = "none";
-  if (f.size > 200 * 1024 * 1024) toast("Large file — conversion may be slow or hit the browser's memory limit. Short clips work best.");
+  gateFor(f);
+}
+
+// Decide free vs Pro from clip length (preferred) and file size (fallback for HEVC the browser can't read).
+function gateFor(f){
+  let done = false;
+  const decide = (dur) => {
+    if (done) return; done = true;
+    window.__lastDur = dur;
+    const longClip = isFinite(dur) && dur > FREE_MAX_SECONDS;
+    const bigFile  = f.size > FREE_MAX_BYTES;
+    needsPro = longClip || bigFile;
+    showGate(dur);
+  };
+  const v = document.createElement("video");
+  v.preload = "metadata";
+  v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(v.src); decide(d); };
+  v.onerror = () => { try{URL.revokeObjectURL(v.src);}catch(e){} decide(NaN); };
+  try { v.src = URL.createObjectURL(f); } catch (e) { decide(NaN); }
+  setTimeout(() => decide(NaN), 4000);
+}
+
+function showGate(dur){
+  const g = $("vgate"); if (!g) return;
+  const durTxt = isFinite(dur) ? (Math.round(dur) + "s") : null;
+  if (isPro){
+    g.textContent = "PRO — convert any length or size.";
+    g.className = "vgate ok";
+  } else if (!needsPro){
+    g.textContent = "✓ Free to convert" + (durTxt ? " (" + durTxt + " clip)." : ".");
+    g.className = "vgate ok";
+  } else {
+    g.textContent = (durTxt ? ("This " + durTxt + " clip") : "This video") + " needs Pro. Free covers clips under 1 min and 80 MB.";
+    g.className = "vgate locked";
+  }
+  g.style.display = "block";
+  $("convertBtn").disabled = !(isPro || !needsPro);
 }
 function fmtBytes(b){ if (b < 1048576) return (b/1024).toFixed(0) + " KB"; return (b/1048576).toFixed(1) + " MB"; }
 
@@ -64,8 +102,8 @@ async function ensureFfmpeg(){
 /* ---------- convert ---------- */
 $("convertBtn").addEventListener("click", convert);
 async function convert(){
-  if (!isPro) { openModal(); return; }
   if (!videoFile) { toast("Choose a video first."); return; }
+  if (needsPro && !isPro) { openModal(); return; }
   $("convertBtn").disabled = true;
   $("vresult").style.display = "none";
   $("bar").classList.add("show"); setProgress(0);
