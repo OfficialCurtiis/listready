@@ -114,8 +114,12 @@ async function convert(){
     const ext = (videoFile.name.match(/\.[a-z0-9]+$/i) || [".mov"])[0];
     const inName = "input" + ext;
     await ffmpeg.writeFile(inName, await fetchFile(videoFile));
+    // Downscale anything over 1080p (long side -> 1920px max) so 4K phone clips
+    // don't blow the browser's memory. Aspect preserved; -2 keeps even dimensions.
+    const scale = "scale='if(gt(iw,ih),min(1920,iw),-2)':'if(gt(iw,ih),-2,min(1920,ih))'";
     await ffmpeg.exec([
       "-i", inName,
+      "-vf", scale,
       "-c:v", "libx264", "-preset", "ultrafast", "-crf", "23", "-pix_fmt", "yuv420p",
       "-c:a", "aac", "-b:a", "128k",
       "-movflags", "+faststart",
