@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>iPhone Video Converter — HEVC / .MOV to MP4 for Windows | ListReady</title>
+<meta name="description" content="Convert iPhone HEVC videos (.mov) to standard MP4 so they play on any Windows PC — right in your browser, nothing uploaded. A ListReady Pro feature." />
+<meta name="keywords" content="hevc to mp4, convert iphone video to mp4, mov to mp4, play iphone video on windows, iphone video won't play windows, convert hevc windows" />
+<link rel="canonical" href="https://listreadyapp.vercel.app/video.html" />
+<meta property="og:title" content="iPhone Video Converter — HEVC/.MOV → MP4 for Windows" />
+<meta property="og:description" content="Convert iPhone HEVC videos to standard MP4 so they play on any Windows PC — in your browser, nothing uploaded." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://listreadyapp.vercel.app/video.html" />
+<meta property="og:image" content="https://listreadyapp.vercel.app/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://listreadyapp.vercel.app/og-image.png" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  .pro-banner{background:linear-gradient(90deg,rgba(255,207,92,.14),rgba(255,179,71,.08));border:1px solid var(--gold);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .pro-banner h3{margin:0 0 4px;font-size:17px}
+  .pro-banner p{margin:0;color:var(--muted);font-size:14px}
+  body.is-pro .free-only{display:none}
+  .limits{font-size:13px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-top:14px}
+  #vname{display:none;margin-top:12px;font-weight:700;font-size:14px}
+  #vstatus{display:none;margin-top:12px;font-size:14px;color:var(--muted)}
+  #vresult{display:none;margin-top:18px}
+  #vpreview{width:100%;max-height:380px;background:#000;border-radius:12px;border:1px solid var(--line)}
+  .vres-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">📸</span> <a href="index.html" style="color:inherit;text-decoration:none">ListReady</a> <span class="pill">in-browser</span></div>
+  <div class="top-actions">
+    <span id="statusPill" class="status-pill status-free">Free</span>
+    <button id="openPro" class="btn-gold">Upgrade to Pro</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Convert iPhone videos to MP4</h1>
+    <p>Got an iPhone <b>HEVC / .MOV</b> video that won’t play on Windows? Convert it to a standard <b>MP4</b> that plays anywhere — right in your browser, nothing uploaded.</p>
+    <div class="trust">🔒 100% private — your video is processed on your device and never uploaded to any server.</div>
+    <div style="text-align:center;margin:8px 0 0;font-size:13px;color:var(--muted)">Photo guides: <a href="index.html">Home</a> · <a href="etsy.html">Etsy</a> · <a href="ebay.html">eBay</a> · <a href="amazon.html">Amazon</a> · <a href="poshmark.html">Poshmark</a> · <a href="windows.html">Open on Windows</a></div>
+  </section>
+
+  <div class="layout">
+    <!-- Pro gate banner (hidden once Pro) -->
+    <div class="pro-banner free-only">
+      <div>
+        <h3>🎬 Video conversion is a Pro feature</h3>
+        <p>One-time <b>$9</b> unlocks it (plus unlimited photo batches & watermarks). Converting HEVC video is heavy work that runs on your device — Pro keeps the lights on.</p>
+      </div>
+      <button id="unlockBtn" class="btn-gold">Unlock with Pro — $9</button>
+    </div>
+
+    <!-- Converter -->
+    <div class="card">
+      <div class="drop" id="vdrop" style="border:2px dashed var(--line);border-radius:var(--radius);padding:36px 20px;text-align:center">
+        <div style="font-size:34px">🎬</div>
+        <h3 style="margin:8px 0 4px">Drop an iPhone video here, or click to browse</h3>
+        <p style="color:var(--muted);margin:0 0 14px;font-size:14px">.MOV and .MP4 supported (HEVC or H.264)</p>
+        <button class="btn-primary" id="vbrowse">Choose video</button>
+        <input type="file" id="vfile" accept="video/*,.mov,.mp4,.m4v" hidden />
+        <div id="vname"></div>
+      </div>
+
+      <div class="action-bar" style="margin-top:16px">
+        <button class="btn-primary" id="convertBtn" disabled>Convert to MP4</button>
+        <span class="filecount" id="vstatus"></span>
+      </div>
+      <div class="bar" id="bar"><div id="barFill"></div></div>
+
+      <div class="limits">
+        ⚙️ <b>How it works:</b> the conversion runs entirely on your computer (nothing is uploaded), using a software video engine. <b>It’s best for short clips</b> — under ~1–2 minutes. Long or 4K videos can be slow or hit your browser’s memory limit. The engine (~25 MB) loads once on your first conversion.
+      </div>
+
+      <div id="vresult">
+        <h3 style="margin:0 0 8px">Done ✨</h3>
+        <video id="vpreview" controls playsinline></video>
+        <div class="vres-bar">
+          <span class="filecount">MP4 · <span id="vsize"></span> · plays on any Windows PC</span>
+          <a id="vdownload" class="btn-primary" style="text-decoration:none" href="#" download>⬇ Download MP4</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="faq">
+    <h2>iPhone video → MP4 questions</h2>
+    <details><summary>Why won’t my iPhone videos play on Windows?</summary><p>iPhones record in HEVC (H.265), Apple’s high-efficiency video codec. Windows doesn’t play HEVC out of the box — you’d normally need a paid codec from the Microsoft Store. Converting the video to standard MP4 (H.264) fixes it: it plays in any Windows app with no extra software.</p></details>
+    <details><summary>Is my video uploaded to a server?</summary><p>No. The conversion runs entirely in your browser, on your own machine, using a software video engine. Your video never leaves your computer.</p></details>
+    <details><summary>How long does it take?</summary><p>It depends on the clip. Because it runs in software on your device (no special hardware), a short clip takes a minute or two; longer or 4K videos take longer and use a lot of memory. Short clips work best.</p></details>
+    <details><summary>Why is video conversion Pro-only?</summary><p>Converting HEVC video is far heavier than photos and loads a ~25 MB engine. Pro ($9 one-time) covers it — and the same purchase also unlocks unlimited photo batches and watermarks on the main tool.</p></details>
+    <details><summary>What formats can I convert?</summary><p>iPhone .MOV and .MP4 videos (HEVC or H.264) → standard H.264 MP4. The result plays on Windows, Android, and just about anything.</p></details>
+  </section>
+</div>
+
+<footer>
+  <div>📸 <b>ListReady</b> — built for online sellers. Runs 100% in your browser.</div>
+  <div style="margin-top:6px">Photo guides: <a href="etsy.html">Etsy</a> · <a href="ebay.html">eBay</a> · <a href="amazon.html">Amazon</a> · <a href="poshmark.html">Poshmark</a> · <a href="windows.html">Open on Windows</a></div>
+  <div style="margin-top:6px">No account · no uploads · no tracking of your files.</div>
+</footer>
+
+<!-- Pro modal -->
+<div class="modal-bg" id="proModal">
+  <div class="modal">
+    <button class="close" id="closePro">×</button>
+    <h2>ListReady Pro</h2>
+    <p style="color:var(--muted);margin:0">One-time payment. Yours forever. No subscription.</p>
+    <div class="price">$9 <small>one time</small></div>
+    <ul class="pro-list">
+      <li>iPhone video → MP4 converter (HEVC/.MOV)</li>
+      <li>Unlimited photos per batch (Free caps at 15)</li>
+      <li>WEBP output + custom watermarks</li>
+      <li>One purchase unlocks everything, forever</li>
+    </ul>
+    <a id="buyBtn" class="btn-gold" style="display:block;text-align:center;text-decoration:none;padding:12px" href="#" target="_blank" rel="noopener">Get Pro on Gumroad →</a>
+    <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:14px">
+      <label style="font-size:13px;font-weight:700;color:var(--muted)">Already bought? Enter your license key:</label>
+      <div class="license-row">
+        <input type="text" id="licenseInput" placeholder="XXXXXXXX-XXXXXXXX-..." />
+        <button class="btn-primary" id="activateBtn">Activate</button>
+      </div>
+      <div class="msg" id="licenseMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
+<script src="video.js"></script>
+</body>
+</html>
