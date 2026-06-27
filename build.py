@@ -29,7 +29,7 @@ NAV = ('<div style="text-align:center;margin:8px 0 0;font-size:13px;color:var(--
        '<a href="ebay.html">eBay</a> · '
        '<a href="amazon.html">Amazon</a> · '
        '<a href="poshmark.html">Poshmark</a> · '
-       '<a href="windows.html">Open on Windows</a> · '
+       '<a href="windows.html">HEIC to JPG</a> · '
        '<a href="video.html">iPhone Video → MP4</a></div>')
 
 TEMPLATE = u"""<!DOCTYPE html>
@@ -147,7 +147,7 @@ TEMPLATE = u"""<!DOCTYPE html>
 
 <footer>
   <div>\U0001F4F8 <b>ListReady</b> — built for online sellers. Runs 100% in your browser.</div>
-  <div style="margin-top:6px">Photo guides: <a href="etsy.html">Etsy</a> · <a href="ebay.html">eBay</a> · <a href="amazon.html">Amazon</a> · <a href="poshmark.html">Poshmark</a> · <a href="windows.html">Open on Windows</a> · <a href="video.html">iPhone Video → MP4</a></div>
+  <div style="margin-top:6px">Photo guides: <a href="etsy.html">Etsy</a> · <a href="ebay.html">eBay</a> · <a href="amazon.html">Amazon</a> · <a href="poshmark.html">Poshmark</a> · <a href="windows.html">HEIC to JPG</a> · <a href="video.html">iPhone Video → MP4</a></div>
   <div style="margin-top:6px">No account · no uploads · no tracking of your images.</div>
 </footer>
 
@@ -242,7 +242,7 @@ windows_faq = faq([
 pages = {
   "index.html": dict(
     title="ListReady — Free HEIC to JPG Converter & Image Resizer for Sellers (Etsy, eBay, Poshmark, Amazon)",
-    desc="Convert iPhone HEIC photos to JPG, resize to Etsy/eBay/Amazon/Poshmark sizes, compress, and strip GPS data — 100% free and 100% in your browser. Your photos never get uploaded.",
+    desc="Convert HEIC to JPG, resize for Etsy, eBay, Amazon & Poshmark, compress, and strip GPS data — free and 100% in your browser. Nothing uploaded.",
     keywords="heic to jpg, convert heic, image resizer, etsy photo size, ebay photo resizer, compress images, remove exif, batch image converter, marketplace photo tool",
     ogtitle="ListReady — Free HEIC→JPG + Resizer for Online Sellers",
     canonical=SITE+"/", preset="1600",
